@@ -80,6 +80,22 @@ This repository contains my personal cheat sheet and anything else I deem useful
 			"override" server rules (if database rule is defined with range A and server rule with disjunct ip range B, only IPs in range A can access the databse)
 			can be defined with T-SQL
 			can be defined only if a server rule is present
+	Elastic pools:
+		Used for multi tennant applications
+		Single-tenancy: Each database stores data from only one tenant.
+		Multi-tenancy: Each database stores data from multiple separate tenants (with mechanisms to protect data privacy).
+		Hybrid also available
+## Data Migration Assistant
+	Analyze Migration
+	Detect compatibility issues with SQL Server or Azure SQL
+## Cosmos DB
+	Speed up query with lookup tables
+	Achieve good partitioning with synthetic partition keys
+## Azure Storage
+	Stores logs in $logs if Storage Analytics is enabled
+## Spark
+	Load data from everything but data factory
+
 
 # Abbreviations:
 | Abbreviation | Meaning |
@@ -89,7 +105,14 @@ This repository contains my personal cheat sheet and anything else I deem useful
 | T-SQL | transact SQL |
 | TSV | tab separated |
 | CSV | comma separated | 
+| SU | Streaming Units | 
+| ITSM | IT Service Management | 
 
 # Further reading
 https://docs.microsoft.com/en-us/azure/databricks/scenarios/store-secrets-azure-key-vault
 https://docs.microsoft.com/en-us/azure/synapse-analytics/sql/overview-features
+https://docs.microsoft.com/en-us/azure/stream-analytics/stream-analytics-twitter-sentiment-analysis-trends
+https://docs.microsoft.com/en-us/azure/cosmos-db/synthetic-partition-keys
+https://docs.microsoft.com/en-us/azure/synapse-analytics/spark/apache-spark-performance
+
+Next question: 31
