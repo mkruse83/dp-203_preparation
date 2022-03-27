@@ -24,10 +24,23 @@ This repository contains my personal cheat sheet and anything else I deem useful
 		two types of schema: well defined and full fidelity
 	Synapse studio:
 		Develop: SQL, Notebooks, Data flows, Power BI
+	Polybase:
+		Use files on Azure Storage as Datasource as if they where SQL tables
+		COPY seems to be better for loading
+	Create dedicated loader accounts as the system administrator account is limited to 25% usage of the system
+	Manage Workloads:
+		Classify: Load and Query; or Ad-Hoc-Query, Dashboard-Query etc.pp... used to assign different resources by classification
+		Importance: High importance workloads take precedence over waiting workloads of lower importance
+		Isolation: Reserve resources for specific workloads
 ## Databricks
 	End to end data engineering and data analysis service
 	Proprietary, optimized version of Spark
 	Preferred for: ML, realtime transformation
+	Notebooks have own DBC file extension
+	Spark:
+		One Driver node, many worker nodes
+		Driver and worker nodes use java programs for scheduling
+		worker nodes runs executor, that provides slots for tasks
 	High Concurrency Cluster
 		Only supports SQL, Python, and R
 	Standard Cluster
@@ -68,9 +81,12 @@ This repository contains my personal cheat sheet and anything else I deem useful
 	Encryption
 		Deterministic: supports joins and equality operations etc., guessable
 		Randomized: does not support joins or equality, more secure
-	Data masking
-		obscure data in result sets, e.g. aXXX@XXXXA.com for emails
-		does not change data in database
+	Security
+		Row Based: restrict access to rows with a predicate function
+		Column based: restrict columns when granting access
+		Data masking
+			obscure data in result sets, e.g. aXXX@XXXXA.com for emails
+			does not change data in database
 	Firewall
 		Server and Database level possible
 		128 rules possible
@@ -91,12 +107,45 @@ This repository contains my personal cheat sheet and anything else I deem useful
 ## Cosmos DB
 	Speed up query with lookup tables
 	Achieve good partitioning with synthetic partition keys
+	Can configure default TTL and override it on item level
+	With Azure Synapse Link:
+		- Can define default TTL for analytical store independently from transactional store
+		- Cannot override TTL on item level
+		- Cannot disable azure synapse link, you have to delete the cosmos db account
+		- Can have non-analytic container in cosmos db account with synapse link
 ## Azure Storage
 	Stores logs in $logs if Storage Analytics is enabled
 ## Spark
 	Load data from everything but data factory
-
-
+## Transactional Databases
+	ACID
+		Atomic: All or nothing
+		Consistent: Data is consistent before and after transaction
+		Isolation: Transaction has no effect on other transactions
+		Durability: Once transaction is deemed complete, the system has persisted the new data
+	OLAP (Online Analytics Processing)
+		long running and complex querries by few users
+	OLTP (Online Transaction Processing)
+		short transactions by many users
+	HTAP (Hybrid Transactional and Analytical Processing)
+		hybrid of OLAP and OLTP; azure synapise link is HTAP
+## Patterns
+	Star Pattern
+		Fact Table that is rapidly changing (Hash-Distribution); contains references to dimensions
+		Dimension Table that contain not-so-often-changed values of entities (like email, name); (Replication)
+		Staging Table contains raw data for loading; (Round Robin)
+	Snowflake Pattern
+		Like star pattern, but dimensions are normalized
+	Slowly Changing Dimensions
+		value of an entity sometimes changes (like user email)
+		SCD1: Use "audit"-columns to know when dimension was changed.
+		SCD2: Use new row to have historic data.
+		SCD3: Use new column (instead of new row) to store old value (e.g. CurrentEmail, OldEmail)
+		SCD6: Combination of 1,2 and 3. Would store historic data as another column and new data in a new row. So "unchanged" fields can be tracked aswell.
+	Data Loading
+		Keep zones in datalake for data of various degrees of "cleanliness"; like bronze for raw, silver for refined and gold for "ready for analytics"
+		Use compression to minimize transfer times and make use of parallel processing
+		When splitting input files, use multiples of your compute nodes so all nodes are used
 # Abbreviations:
 | Abbreviation | Meaning |
 | ------------- | ------------- |
