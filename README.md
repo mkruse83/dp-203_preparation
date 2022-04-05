@@ -5,10 +5,10 @@ This repository contains my personal cheat sheet and anything else I deem useful
 	ELT solution
 	Open Source Spark
 	Preferred for: SQL analyis, reporting, BI, modern data warehousing
-	Dedicated vs Serverless SQL Pool
+	Serverless SQL Pool
 		Serverless SQL Pool = Polybase + Datalake Storage = Query Datalake as if it is a database
-		Serverless SQL Pool has no data manipulation features (no insert, update...); need Spark to modify files in data lake
-	SQL Pool
+		has no data manipulation features (no insert, update...); need Spark to modify files in data lake
+	Dedicated SQL Pool
 		Hash-Distributed tables
 			row based
 			for high performance
@@ -283,3 +283,12 @@ https://docs.microsoft.com/en-us/azure/synapse-analytics/sql/overview-features
 https://docs.microsoft.com/en-us/azure/stream-analytics/stream-analytics-twitter-sentiment-analysis-trends
 https://docs.microsoft.com/en-us/azure/cosmos-db/synthetic-partition-keys
 https://docs.microsoft.com/en-us/azure/synapse-analytics/spark/apache-spark-performance
+
+# Thoughts on the exam itself:
+1. Around 10 questions asking for querries (SQL and Spark)
+2. 55 Normal questions, 5 non-reviewable questions, 5 case study questions
+3. 5 Minutes are very few minutes for the case study
+4. Udemy prepares ok, but not good
+5. Alot of placeholder questions
+6. My main questions: Windows, Temporal querries, Delta Lake, External tables, Security
+7. Topics I did not have: SDKs, Spark internals (Nodetypes, Tungsten)
