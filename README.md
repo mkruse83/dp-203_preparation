@@ -1,14 +1,13 @@
 # dp-203_preparation
 This repository contains my personal cheat sheet and anything else I deem useful in preparation for the DP-203 exam.
 
-## T-SQL
-	WHERE => no data movement between compute nodes
-	JOIN => might have data movement between compute nodes
-
 ## Synapse Analysis
 	ELT solution
 	Open Source Spark
 	Preferred for: SQL analyis, reporting, BI, modern data warehousing
+	Dedicated vs Serverless SQL Pool
+		Serverless SQL Pool = Polybase + Datalake Storage = Query Datalake as if it is a database
+		Serverless SQL Pool has no data manipulation features (no insert, update...); need Spark to modify files in data lake
 	SQL Pool
 		Hash-Distributed tables
 			row based
@@ -34,6 +33,8 @@ This repository contains my personal cheat sheet and anything else I deem useful
 		Classify: Load and Query; or Ad-Hoc-Query, Dashboard-Query etc.pp... used to assign different resources by classification
 		Importance: High importance workloads take precedence over waiting workloads of lower importance
 		Isolation: Reserve resources for specific workloads
+	Supported file formats: Avro, Parquet, ORC, Delimited Text, Binary, Json, XML, Excel
+	Dynamic Management Views: reports on performance, errors, etc; does not report on best practices (e.g. encryption)
 ## Databricks
 	End to end data engineering and data analysis service
 	Proprietary, optimized version of Spark
@@ -52,6 +53,8 @@ This repository contains my personal cheat sheet and anything else I deem useful
 		One Driver node, many worker nodes
 		Driver and worker nodes use java programs for scheduling
 		worker nodes runs executor, that provides slots for tasks
+		Supports TEXT, JSON, CSV, JDBC, ORC, PARQUET, DELTA, LIBSVM and HIVE
+		Invoke the command spark.streams.active to see the list of active streams
 		Catalyst optimizer:
 			analyze, optimize logical plan, physical planning, code generation
 		Tungsten:
@@ -88,13 +91,26 @@ This repository contains my personal cheat sheet and anything else I deem useful
 		max number of jobs concurrently running: 150
 		max number of notebooks or execution contexts: 150
 		max number of azure databricks API calls: 1500
+	Data Protection
+		Encryption at-rest – Service Managed Keys, User Managed Keys
+		Encryption in-transit (Transport Layer Security - TLS)
+		File/Folder Level access control lists (ACLs) for Azure Active Directory (AAD) Users, Groups, Service Principals
+		ACLs for Clusters, Folders, Notebooks, Tables, Jobs
+		Secrets with Azure Key Vault
 ## Azure Stream Analytics
 	Connects to:
 		- Azure IoT Hub
 		- Azure Event Hub
 		- Azure Blob Storage
+## Azure Data Explorer
+	Data analytics service for real time big data
+	Usecases: IoT, Log Streams...
+	Uses Data Lake storage and Kusto query language
+	Creating external tables in TSV, CSV, JSON and Parquet
+	Reading data from many file formats
 ## Data Factory
 	ETL solution
+	SDK Support for: .NET, Pyhton, REST, ARM Template, Powershell
 	Integration
 		Azure SQL Server Integration Services (SSIS)
 			capabilities: execute packages on azure
@@ -105,7 +121,7 @@ This repository contains my personal cheat sheet and anything else I deem useful
 			bring your own driver (SAP Hana, MySQL)
 		Azure
 			capabilities: data flow, data movement, activity dispatch
-			no private network
+			no private network!
 	Monitoring:
 		keeps run logs and data only for 45 days; use Azure Monitor for more days
 	Create pipelines with: REST API, Python SDK, .NET SDK, Powershell, Azure CLI, ARM Templates
@@ -119,6 +135,11 @@ This repository contains my personal cheat sheet and anything else I deem useful
 		performs file system operations
 ## HDInsight
 	Spark as a service
+	Autoscaling
+	In-memory caching of data
+	Query from external relational stores
+	Support for firewall
+	Supports: Spark, Hive/Interactive Query, HBASE, Kafka, Storm, Hadoop, Ooozie, ZooKeeper, Ambari
 ## Azure SQL
 	Need to configure Azure AD Administrator if AD users should be able to connect to database
 	Encryption
@@ -144,6 +165,9 @@ This repository contains my personal cheat sheet and anything else I deem useful
 		Single-tenancy: Each database stores data from only one tenant.
 		Multi-tenancy: Each database stores data from multiple separate tenants (with mechanisms to protect data privacy).
 		Hybrid also available
+	Data Sync
+		Sync data between on-prem and cloud
+	Isolation Levels: ReadCommitted, ReadUncommitted, RepeatableRead, Serializable, Snapshot
 ## Data Migration Assistant
 	Analyze Migration
 	Detect compatibility issues with SQL Server or Azure SQL
@@ -152,6 +176,7 @@ This repository contains my personal cheat sheet and anything else I deem useful
 	Achieve good partitioning with synthetic partition keys
 	Can configure default TTL and override it on item level
 	Synapse Link:
+		HTAP solution
 		real time analysis on data in Cosmos DB
 		two types of schema: well defined and full fidelity
 	With Azure Synapse Link:
@@ -159,12 +184,27 @@ This repository contains my personal cheat sheet and anything else I deem useful
 		- Cannot override TTL on item level
 		- Cannot disable azure synapse link, you have to delete the cosmos db account
 		- Can have non-analytic container in cosmos db account with synapse link
+	Available APIs: MongoDB, Cassandra, Gremlin, SQL, Table
+	Consistency Levels:
+		Strong - strongest
+		Bounded staleness	
+		Session
+		Consistent prefix
+		Eventual - weakest
 ## Azure Storage
+	250 storage accounts per subscription with 500 TB each
 	Azure Tables:
 		- like Cosmos DB a NoSQL Database
 	Azure Data Lake:
 		- use passthrough to let configured clusters access data
 	Stores logs in $logs if Storage Analytics is enabled
+	Use Azure Files or Azure Disks as persistent volumes for containers
+## Data Lake Analytics
+	big data analysis solution	
+	U-SQL, R, Python, and .NET
+## T-SQL
+	WHERE => no data movement between compute nodes
+	JOIN => might have data movement between compute nodes
 ## Transactional Databases
 	ACID
 		Atomic: All or nothing
@@ -200,6 +240,31 @@ This repository contains my personal cheat sheet and anything else I deem useful
 		When splitting input files, use multiples of your compute nodes so all nodes are used
 	Modern Data Warehouse:
 		Stages: Ingest, Store, Prep&Train, Model&Serve
+	Flattening nested schemas
+		Define function for flattening
+		Flatten nested schema
+		Explode arrays
+		Flatten child nested schema
+Data Share
+	Share data to other subscriptions
+	Copies data
+	Workflow:
+		1. Create Data Share
+		2. Add Datasets (SQL Database, Datalakes) to Data Share
+		3. Invite users
+		4. As invited user, accept invite
+		5. Map datasets in datashare to own resources
+		6. Trigger data refresh. Then everythin will be copied to own resources.
+Temporal querrying:
+	Using Windows
+	Tumbling:	Fixed size, non-overlapping, fixed interval
+	Hopping: Fixed size, overlapping, fixed interval
+	Sliding: Fixed size, overlapping, flexible interval (only when events enter or leave window)
+	Session: Flexible size, non-overlapping, flexible interval (only when events occur, window extends with occurrence before timeout)
+## Process
+	Agile focuses on processes highlighting change while accelerating delivery.
+	CI/CD focuses on software-defined life cycles highlighting tools that emphasize automation.
+	DevOps focuses on culture highlighting roles that emphasize responsiveness.
 # Abbreviations:
 | Abbreviation | Meaning |
 | ------------- | ------------- |
@@ -210,12 +275,11 @@ This repository contains my personal cheat sheet and anything else I deem useful
 | CSV | comma separated | 
 | SU | Streaming Units | 
 | ITSM | IT Service Management | 
-
+| HTAP | Hybrid Transactional and Analytical Processing | 
+| TDE | Transparent Data Encryption | 
 # Further reading
 https://docs.microsoft.com/en-us/azure/databricks/scenarios/store-secrets-azure-key-vault
 https://docs.microsoft.com/en-us/azure/synapse-analytics/sql/overview-features
 https://docs.microsoft.com/en-us/azure/stream-analytics/stream-analytics-twitter-sentiment-analysis-trends
 https://docs.microsoft.com/en-us/azure/cosmos-db/synthetic-partition-keys
 https://docs.microsoft.com/en-us/azure/synapse-analytics/spark/apache-spark-performance
-
-Next question: 31
